@@ -3458,6 +3458,10 @@ fieldset[disabled] .btn-link:focus {
   line-height: 1.5;
   border-radius: 3px;
 }
+.btn-group {
+  padding-top: 30px;
+}
+
 .btn-block {
   display: block;
   width: 100%;
@@ -3604,6 +3608,9 @@ tbody.collapse.in {
 .dropdown-menu-left {
   right: auto;
   left: 0;
+}
+.dropdown-menu .pull-left{
+  left:0;
 }
 .dropdown-header {
   display: block;
@@ -5826,7 +5833,7 @@ button.list-group-item-danger.active:focus {
 }
 .well {
   min-height: 20px;
-  padding: 19px;
+  padding: 20px;
   margin-bottom: 20px;
   background-color: #f5f5f5;
   border: 1px solid #e3e3e3;
