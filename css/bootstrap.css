@@ -2640,6 +2640,9 @@ input[type="search"] {
   margin-top: 10px;
   margin-bottom: 10px;
 }
+.varv {
+  color:#0080FF;
+}
 .radio label,
 .checkbox label {
   min-height: 20px;
