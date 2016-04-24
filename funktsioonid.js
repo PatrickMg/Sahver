@@ -1,14 +1,3 @@
-
-// CACHE
-// during a request
-var user = cache.getUser(sessionToken);
-
-// during login/signup
-cache.setUser(sessionToken, userObject);
-
-// during logout
-cache.clearUser(sessionToken);
-
 //PARSE START
 Parse.initialize("mnBuZ0BSyojKsyUNKxUAbJqy2gsVAtucOFJ6By7e", "yw2Q6Z66rWaMbefRUl2RiGhJWIh5M2zLlmtBy4WS");
 
@@ -19,13 +8,11 @@ $(document).on("click", "#registerBtn", function(){
 });
 
 $(document).on("click", "#loginBtn", function(){
-	// $(".login").fadeOut();
-	// $(".register").fadeIn();
 	var username = $(".login #username").val();
 	var password = $(".login #password").val();
 	Parse.User.logIn(username, password, {
 		success: function(user){
-			window.location.href = "http://www.tlu.ee/~loginz/Korralik/Veebiraamistikud/parse/members.html";
+			window.location.href = "http://www.tlu.ee/~loginz/Sahver/user.html";
 		},
 		error: function(user, error){
 			alert("Sisselogimine ebaõnnestus");
@@ -50,13 +37,11 @@ $(document).on("click", "#register", function(){
 	var password = $(".register #password").val();
 	var passwordAgain = $(".register #passwordAgain").val();
 	var email = $(".register #email").val();
-	var sex = $(".register #sex").val();
 	if (password == passwordAgain){
 		var user = new Parse.User();
 		user.set("username", username);
 		user.set("password", password);
 		user.set("email", email);
-		user.set("sex", sex);
 		user.signUp(null,{
 			success: function(user){
 				alert("Kasutaja loomine õnnestus");

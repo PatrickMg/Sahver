@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type=text/css href="css/bootstrap.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script type="text/javascript" src="http://www.parsecdn.com/js/parse-latest.js"></script>
     <script src="funktsioonid.js"></script>
   </head>
 <body>
@@ -26,13 +27,13 @@
             <ul class="dropdown-menu dropdown-menu-right">
               <li>
                 <form id="formLogin" class="form" style="padding-bottom: 15px; margin-left: 20px; margin-right: 20px; margin-top: 20px;">
-    							    <input name="username" id="username" type="text" placeholder=Kasutajanimi pattern="^[a-z,A-Z,0-9,_]{6,15}$" data-valid-min="6" title="Enter your username" required="">
-    							    <input name="password" id="password" type="password" placeholder="Parool" title="Enter your password" required=""><br>
+    							    <input name="username" id="username" type="text" placeholder=Kasutajanimi pattern="^[a-z,A-Z,0-9,_]{6,15}$" data-valid-min="6" required="">
+    							    <input style="margin-top:10px;" name="password" id="password" type="password" placeholder="Parool" required=""><br>
     						</form>
               </li>
               <li class="divider"></li>
               <li>
-                <a href="user.html">Sisenen</a>
+                <a href="user.html" id="loginBtn">Sisenen</a>
               </li>
               <li class="divider"></li>
               <li>
@@ -69,6 +70,5 @@
         </div>
       </div>
     <script src="js/bootstrap.js"></script>
-    <script src="funktsioonid.js"></script>
   </body>
 </html>
