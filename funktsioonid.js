@@ -1,7 +1,7 @@
 //PARSE START
-Parse.initialize("mnBuZ0BSyojKsyUNKxUAbJqy2gsVAtucOFJ6By7e", "yw2Q6Z66rWaMbefRUl2RiGhJWIh5M2zLlmtBy4WS");
+Parse.initialize("mnBuZ0BSyojKsyUNKxUAbJqy2gsVAtucOFJ6By7e", "nVC9gfLVC0mz9FdlEJ6O8aDMFpcILnQUqeYNuFqb");
 
-// SISSELOGIMINE
+//Registreerimise nupp
 $(document).on("click", "#registerBtn", function(){
 	$(".login").fadeOut();
 	$(".register").fadeIn();
@@ -16,6 +16,7 @@ $(document).on("click", "#loginBtn", function(){
 		},
 		error: function(user, error){
 			alert("Sisselogimine ebaõnnestus");
+			console.log(error);
 		}
 	});
 });

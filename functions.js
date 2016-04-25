@@ -1,3 +1,61 @@
+Parse.initialize("mnBuZ0BSyojKsyUNKxUAbJqy2gsVAtucOFJ6By7e", "nVC9gfLVC0mz9FdlEJ6O8aDMFpcILnQUqeYNuFqb");
+
+//Sisselogimine
+$(document).on("click", "#loginBtn", function(){
+	// $(".login").fadeOut();
+	// $(".register").fadeIn();
+	var username = $(".login #username").val();
+	var password = $(".login #password").val();
+	Parse.User.logIn(username, password, {
+		success: function(user){
+			window.location.href = "http://www.tlu.ee/~loginz/Sahver/user.html";
+		},
+		error: function(user, error){
+			alert("Sisselogimine ebaõnnestus");
+		}
+	});
+});
+
+//UUS KASUTAJA
+$(document).on("click", "#register", function(){
+	var username = $(".register #username").val();
+	var password = $(".register #password").val();
+	var passwordAgain = $(".register #passwordAgain").val();
+	var email = $(".register #email").val();
+	if (password == passwordAgain){
+		var user = new Parse.User();
+		user.set("username", username);
+		user.set("password", password);
+		user.set("email", email);
+		user.signUp(null,{
+			success: function(user){
+				alert("Kasutaja loomine õnnestus");
+			},
+			error: function(user,error){
+				alert("Error: "+error.code + " " +error.message );
+			}
+		});
+	}
+});
+//Registreerimise nupp
+$(document).on("click", "#registerBtn", function(){
+	$(".login").fadeOut();
+	$(".register").fadeIn();
+});
+
+//UNUSTASID PAROOLI
+$(document).on("click", "#forgotpwBtn", function(){
+	var email = $(".forgotpw #email").val();
+	Parse.User.requestPasswordReset(email, {
+		success: function(){
+			alert("Mine kontrolli oma eposti, uus parool on seal");
+			$("#forgotpwBack").click();
+		},
+		error: function(){
+			alert("Sellist emaili ei pruugi olla andmebaasis");
+		}
+	});
+});
 
 //SISSELOGIMINE
 Parse.User.logIn("myname", "mypass", {
