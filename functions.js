@@ -154,7 +154,7 @@ userQuery.find({
   }
 });
 
-//KASUTAJATE LEIDMINE 2
+//KASUTAJATE LEIDMINE 2 // FILTREERIMINE
 var query = new Parse.Query(Parse.User);
 query.equalTo("gender", "female");  // find all the women
 query.find({
@@ -173,7 +173,7 @@ follow.set("to", otherUser);
 follow.set("date", Date());
 follow.save();
 
-//
+//KASUTAJATE OTSIMINE, KEDA JÄLGID
 var query = new Parse.Query("Follow");
 query.equalTo("from", Parse.User.current());
 query.find({
