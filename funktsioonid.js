@@ -149,22 +149,27 @@ var query = new Parse.Query("Hoidised");
 // siin siis reastame kuupäeva järgi kahanevas järjekorras
 query.descending("createdAt");
 // siin nüüd võtame ainult 10 viimast
-query.limit(10);
+//query.limit(10);
 // siin siis vist käsk fetchimiseks, et võtab andmed andmebaasist ja määrame ära kaks funktsiooni. kui on success ja kui on error.
 query.find({
 	success: function(data) {
 		// siin peaks kätte saama andmed andmebaasist ja siis saab edasi tegeleda nende kuvamisega
 		console.log("QUERY SUCCESS", data);
-		var t = "<table>" ;
+		var t = '' ;
+		var i = 0;
         data.forEach(function(d){
-            console.log(d.attributes) ;
-            t += "<tr>";
-            t += "<td>" + d.attributes.name + "</td>";
-            t += "<td>" + d.attributes.location + "</td>"; // ja nii edasi, oleneb mida sul vaja on andmebaasist
-            t += "</tr>";
+            console.log(d) ;
+            t += '<div class="panel-group" id="accordion"><div class="panel panel-default"><div class="panel-heading">'+
+							'<h4 class="panel-title">'+
+								'<a data-toggle="collapse" data-parent="#accordion" href="#collapse'+i+'">'+d.attributes.name+'<div id="info" class="info"></div></a>'+
+							'</h4>'+
+						'</div>'+
+						'<div id="collapse'+i+'" class="panel-collapse collapse in">'+
+							'<div class="panel-body" id="info">'+d.attributes.location+'</div>'+
+						'</div></div></div>';
+						i++;
         }) ;
-        t += "</table>";
-        document.getElementById({}).innerHTML = t;
+        document.getElementById("item_list").innerHTML = t;
 	},
 	error: function(data){
 		// see on selleks, kui tekib error andmete kättesaamisega
