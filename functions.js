@@ -9,6 +9,7 @@ $(document).on("click", "#registerBtn", function(){
 
 //SISSELOGIMISE NUPP
 $(document).on("click", "#loginBtn", function(){
+	var admin= "admin";
 	var username = $(".login #username").val();
 	var password = $(".login #password").val();
 	Parse.User.logIn(username, password, {
@@ -63,16 +64,14 @@ $(document).on("click", "#forgotpwBtn", function(){
 });
 
 //KONTROLLIB SISSELOGIMIST
-$(document).ready(function(){
-	var user = Parse.User.current();
-	var username = user.get("username");
-	console.log(user);
-
-	if (!user){
-		window.location.href = "http://www.tlu.ee/~loginz/Sahver/index.html";
-	}else{
-
-	}
+//$(document).ready(function(){
+	//var user = Parse.User.current();
+	//if (!user){
+	//	window.location.href = "http://www.tlu.ee/~loginz/Sahver/index.html";
+//	}else{
+//		window.location.href = "http://www.tlu.ee/~loginz/Sahver/index.html";
+//	}
+//});
 
 //VÄLJALOGIMINE
 	$(document).on("click", "#logout", function(){
@@ -81,6 +80,9 @@ $(document).ready(function(){
 	});
 
 //AVALEHE KUVA
+$(document).ready(function(){
+	var user = Parse.User.current();
+	var username = user.get("username");
 	$(".avaleht").html("Tere tulemast, "+username+"!");
 });
 
@@ -158,11 +160,11 @@ query.descending("createdAt");
 query.find({
 	success: function(data) {
 		// siin peaks kätte saama andmed andmebaasist ja siis saab edasi tegeleda nende kuvamisega
-		console.log("QUERY SUCCESS", data);
+		//console.log("QUERY SUCCESS", data);
 		var t = '' ;
 		var i = 0;
         data.forEach(function(d){
-            console.log(d) ;
+            //console.log(d) ;
             t += '<div class="panel-group" id="accordion"><div class="panel panel-default"><div class="panel-heading">'+
 							'<h4 class="panel-title">'+
 								'<a data-toggle="collapse" data-parent="#accordion" href="#collapse'+i+'">'+d.attributes.name+'<div id="info" class="info"></div></a>'+
@@ -176,6 +178,6 @@ query.find({
 	},
 	error: function(data){
 		// see on selleks, kui tekib error andmete kättesaamisega
-		console.log("QUERY FAILED",data);
+		//console.log("QUERY FAILED",data);
 	}
 });
