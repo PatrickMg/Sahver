@@ -1,22 +1,32 @@
+//PARSE START
 Parse.initialize("mnBuZ0BSyojKsyUNKxUAbJqy2gsVAtucOFJ6By7e", "nVC9gfLVC0mz9FdlEJ6O8aDMFpcILnQUqeYNuFqb");
 
-//Sisselogimine
+//REGISTREERIMISE NUPP
+$(document).on("click", "#registerBtn", function(){
+	$(".login").fadeOut();
+	$(".register").fadeIn();
+});
+
+//SISSELOGIMISE NUPP
 $(document).on("click", "#loginBtn", function(){
-	// $(".login").fadeOut();
-	// $(".register").fadeIn();
 	var username = $(".login #username").val();
 	var password = $(".login #password").val();
 	Parse.User.logIn(username, password, {
 		success: function(user){
-			window.location.href = "http://www.tlu.ee/~loginz/Sahver/user.html";
+			if (username == admin){
+				window.location.href = "http://www.tlu.ee/~loginz/Sahver/admin.html";
+			} else{
+				window.location.href = "http://www.tlu.ee/~loginz/Sahver/user.html";
+			}
 		},
 		error: function(user, error){
 			alert("Sisselogimine ebaõnnestus");
+			console.log(error);
 		}
 	});
 });
 
-//UUS KASUTAJA
+//REGISTREERIMINE
 $(document).on("click", "#register", function(){
 	var username = $(".register #username").val();
 	var password = $(".register #password").val();
@@ -37,19 +47,14 @@ $(document).on("click", "#register", function(){
 		});
 	}
 });
-//Registreerimise nupp
-$(document).on("click", "#registerBtn", function(){
-	$(".login").fadeOut();
-	$(".register").fadeIn();
-});
 
-//UNUSTASID PAROOLI
+
+//PAROOLI TAASTAMINE
 $(document).on("click", "#forgotpwBtn", function(){
 	var email = $(".forgotpw #email").val();
 	Parse.User.requestPasswordReset(email, {
 		success: function(){
 			alert("Mine kontrolli oma eposti, uus parool on seal");
-			$("#forgotpwBack").click();
 		},
 		error: function(){
 			alert("Sellist emaili ei pruugi olla andmebaasis");
@@ -57,179 +62,120 @@ $(document).on("click", "#forgotpwBtn", function(){
 	});
 });
 
-//SISSELOGIMINE
-Parse.User.logIn("myname", "mypass", {
-  success: function(user) {
-    // Do stuff after successful login.
-  },
-  error: function(user, error) {
-    // The login failed. Check error to see why.
-  }
+//KONTROLLIB SISSELOGIMIST
+$(document).ready(function(){
+	var user = Parse.User.current();
+	var username = user.get("username");
+	console.log(user);
+
+	if (!user){
+		window.location.href = "http://www.tlu.ee/~loginz/Sahver/index.html";
+	}else{
+
+	}
+
+//VÄLJALOGIMINE
+	$(document).on("click", "#logout", function(){
+		Parse.User.logOut();
+		window.location.href = "http://www.tlu.ee/~loginz/Sahver/index.html";
+	});
+
+//AVALEHE KUVA
+	$(".avaleht").html("Tere tulemast, "+username+"!");
 });
 
-//PAROOLI TAASTAMINE
-Parse.User.requestPasswordReset("email@example.com", {
-  success: function() {
-  // Password reset request was sent successfully
-  },
-  error: function(error) {
-    // Show the error message somewhere
-    alert("Error: " + error.code + " " + error.message);
-  }
+//HOIDISE LISAMINE
+$(document).on("click", "#lisaHoidis", function(){
+	var user = Parse.User.current();
+	var username = user.get("username");
+	var name = $(".add #name").val();
+	var content = $(".add #content").val();
+	var location = $(".add #location").val();
+	var makeDate = $(".add #makeDate").val();
+
+		var Hoidised = Parse.Object.extend("Hoidised");
+		var hoidis = new Hoidised();
+		hoidis.set("username", username);
+		hoidis.set("name", name);
+		hoidis.set("content", content);
+		hoidis.set("location", location);
+		hoidis.set("makeDate", makeDate);
+		hoidis.save(null,{
+			success: function(user){
+				alert("Hoidise lisamine õnnestus!");
+			},
+			error: function(user,error){
+				alert("Hoidise lisamine ei õnnestunud!" );
+				console.log(error);
+			}
+		});
 });
 
-//ADMINNI MÄÄRAMINE
-var roleACL = new Parse.ACL();
-roleACL.setPublicReadAccess(true);
-var role = new Parse.Role("Administrator", roleACL);
-role.save();
+//LISAMISE NUPP
+$(document).on("click", "#addBtn", function(){
+	$(".lisaHoidis").fadeIn();
+});
 
-//OBJEKTIDE SALVESTAMINE
-var jobApplication = new Parse.Object("JobApplication");
-jobApplication.set("applicantName", "Joe Smith");
-jobApplication.set("applicantResumeFile", parseFile);
-jobApplication.save();
-
-
-//OBJEKTIDE SALVESTAMINE
-var GameScore = Parse.Object.extend("GameScore");
-var gameScore = new GameScore();
-
-gameScore.set("score", 1337);
-gameScore.set("playerName", "Sean Plott");
-gameScore.set("cheatMode", false);
-
-gameScore.save(null, {
-  success: function(gameScore) {
-    // Execute any logic that should take place after the object is saved.
-    alert('New object created with objectId: ' + gameScore.id);
-  },
-  error: function(gameScore, error) {
-    // Execute any logic that should take place if the save fails.
-    // error is a Parse.Error with an error code and message.
-    alert('Failed to create new object, with error code: ' + error.message);
-  }
+//MUUDA PAROOLI
+$(document).on("click", "#changePw", function(){
+	var password = $(".changePw #password").val();
+	var passwordAgain = $(".changePw #passwordAgain").val();
+	if (password == passwordAgain){
+		var user =  Parse.User.current();
+		user.set("password", password);
+		user.save(null,{
+			success: function(user){
+				alert("Parooli muutmine õnnestus!");
+			},
+			error: function(user,error){
+				alert("Error: "+error.code + " " +error.message );
+			}
+		});
+	}
 });
 
 //HOIDISTE KUVAMINE
-// set up our query for a User object
-var userQuery = new Parse.Query(Parse.User);
+$(document).ready(".info",function(){
+	var user = Parse.User.current();
+	var username = user.get("username");
+	var username1 = Parse.Hoidised.get("username");
+	if(username == username1){
+		var hoidis = Parse.Hoidised.get("name");
 
-// configure any constraints on your query...
-// for example, you may want users who are also playing with or against you
+	} else {
 
-// tell the query to fetch all of the Weapon objects along with the user
-// get the "many" at the same time that you're getting the "one"
-userQuery.include("weaponsList");
-
-// execute the query
-userQuery.find({
-  success: function(results){
-    // results contains all of the User objects, and their associated Weapon objects, too
-  }
+	}
 });
 
-//ASJADE LISAMINE
-var game = new Parse.Object("Game");
-game.set("createdBy", Parse.User.current());
-
-//HOIDISTE KÄTTESAAMINE
-var weapons = Parse.User.current().get("weaponsList");
-
-//KASUTAJATE LEIDMINE
-// set up our query for a User object
-var userQuery = new Parse.Query(Parse.User);
-
-// configure any constraints on your query...
-// for example, you may want users who are also playing with or against you
-
-// tell the query to fetch all of the Weapon objects along with the user
-// get the "many" at the same time that you're getting the "one"
-userQuery.include("weaponsList");
-
-// execute the query
-userQuery.find({
-  success: function(results){
-    // results contains all of the User objects, and their associated Weapon objects, too
-  }
-});
-
-//KASUTAJATE LEIDMINE 2 // FILTREERIMINE
-var query = new Parse.Query(Parse.User);
-query.equalTo("gender", "female");  // find all the women
+//HOIDISTE KUVAMINE
+// sellega peaks küsima andmeid Parse andmebaasis, see listItem on äkki andmetabeli nimi
+var query = new Parse.Query("Hoidised");
+// siin siis reastame kuupäeva järgi kahanevas järjekorras
+query.descending("createdAt");
+// siin nüüd võtame ainult 10 viimast
+//query.limit(10);
+// siin siis vist käsk fetchimiseks, et võtab andmed andmebaasist ja määrame ära kaks funktsiooni. kui on success ja kui on error.
 query.find({
-  success: function(women) {
-    // Do stuff
-  }
-});
-
-// SÕPRADE SALVESTAMINE
-var otherUser = new Parse.Query("Follow");
-
-// create an entry in the Follow table
-var follow = new Parse.Object("Follow");
-follow.set("from", Parse.User.current());
-follow.set("to", otherUser);
-follow.set("date", Date());
-follow.save();
-
-//KASUTAJATE OTSIMINE, KEDA JÄLGID
-var query = new Parse.Query("Follow");
-query.equalTo("from", Parse.User.current());
-query.find({
-  success: function(users){
-
-}});
-
-//HOIDISTE FILTREERIMINE
-// set up our query for the Book object
-var bookQuery = new Parse.Query("Book");
-
-// configure any constraints on your query...
-// tell the query to fetch all of the Author objects along with the Book
-bookQuery.include("authors");
-
-// execute the query
-bookQuery.find({
-  success: function(books){
-    var authorList = book.get("authors");
-  }});
-
-//KASUTAJATE ARVU KUVAMINE
-// set up our query for the Book object
-var bookQuery = new Parse.Query("Book");
-
-// configure any constraints on your query...
-bookQuery.equalTo("authors", author);
-
-// tell the query to fetch all of the Author objects along with the Book
-bookQuery.include("authors");
-
-// execute the query
-bookQuery.find({
-  success: function(books){
-    //Mida tuleks teha kui see õnnestub
-  }
-});
-
-//HOIDISE LISAMINE JA KUVAMINE
-var user = Parse.User.current();
-
-// Make a new post
-var Post = Parse.Object.extend("Post");
-var post = new Post();
-post.set("title", "My New Post");
-post.set("body", "This is some great content.");
-post.set("user", user);
-post.save(null, {
-  success: function(post) {
-    // Find all posts by the current user
-    var query = new Parse.Query(Post);
-    query.equalTo("user", user);
-    query.find({
-      success: function(usersPosts) {
-        // userPosts contains all of the posts by the current user.
-      }
-    });
-  }
+	success: function(data) {
+		// siin peaks kätte saama andmed andmebaasist ja siis saab edasi tegeleda nende kuvamisega
+		console.log("QUERY SUCCESS", data);
+		var t = '' ;
+		var i = 0;
+        data.forEach(function(d){
+            console.log(d) ;
+            t += '<div class="panel-group" id="accordion"><div class="panel panel-default"><div class="panel-heading">'+
+							'<h4 class="panel-title">'+
+								'<a data-toggle="collapse" data-parent="#accordion" href="#collapse'+i+'">'+d.attributes.name+'<div id="info" class="info"></div></a>'+
+							'</h4>'+
+						'</div>'+
+						'<div id="collapse'+i+'" class="panel-collapse collapse in">'+
+							'<div class="panel-body" id="info"> <label>Koostis:</label>'+d.attributes.content+'</br><label>Asukoht:</label>'+d.attributes.location+'</br><label>Valmistamise kuupäev:</label>'+d.attributes.makeDate+'</div></div></div>';
+						i++;
+        }) ;
+        document.getElementById("item_list").innerHTML = t;
+	},
+	error: function(data){
+		// see on selleks, kui tekib error andmete kättesaamisega
+		console.log("QUERY FAILED",data);
+	}
 });
