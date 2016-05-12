@@ -1,6 +1,7 @@
 //PARSE START
 Parse.initialize("mnBuZ0BSyojKsyUNKxUAbJqy2gsVAtucOFJ6By7e", "nVC9gfLVC0mz9FdlEJ6O8aDMFpcILnQUqeYNuFqb");
-
+var listitems = [];
+var itemsids = [];
 //REGISTREERIMISE NUPP
 $(document).on("click", "#registerBtn", function(){
 	$(".login").fadeOut();
@@ -102,9 +103,11 @@ $(document).on("click", "#lisaHoidis", function(){
 		hoidis.set("content", content);
 		hoidis.set("location", location);
 		hoidis.set("makeDate", makeDate);
+		hoidis.set("mitu", 1);
 		hoidis.save(null,{
 			success: function(user){
 				alert("Hoidise lisamine õnnestus!");
+				getListItems();
 			},
 			error: function(user,error){
 				alert("Hoidise lisamine ei õnnestunud!" );
@@ -117,6 +120,75 @@ $(document).on("click", "#lisaHoidis", function(){
 $(document).on("click", "#addBtn", function(){
 	$(".lisaHoidis").fadeIn();
 });
+var plusCount = function(id,objid){
+	console.log("addmore",id);
+	if (isNaN(parseInt($("#amount_"+id).text()))){
+		$("#amount_"+id).text("0");
+	}
+	var query = new Parse.Query("Hoidised");
+	query.equalTo("objectId", objid);
+	query.first({
+		success: function(data){
+			console.log("query #1 success");
+			data.save(null,{
+				success: function(d){
+					console.log("query #2 success");
+					console.log($("#amount_"+id).text());
+					d.set("mitu", parseInt($("#amount_"+id).text())+1);
+					d.save(null, function(){
+						console.log("query saved #3");
+						$("#amount_"+id).text(parseInt($("#amount_"+id).text())+1);
+					});
+					console.log("new amount", $("#amount_"+id).text()+1);
+				}
+			});
+		}
+	});
+};
+
+var minusCount = function(id, objid){
+	console.log("minus item",id);
+	if (isNaN(parseInt($("#amount_"+id).text()))){
+		$("#amount_"+id).text("1");
+	}
+	if ( parseInt($("#amount_"+id).text()) < 2 ){
+		var q = new Parse.Query("Hoidised");
+		q.equalTo("objectId", objid);
+		q.first({
+			success: function(data){
+				data.destroy({
+					success:function(d){
+						console.log("data deleted successfully", d);
+						getListItems();
+					},
+					error: function(d){
+						console.log("data deletion error", d);
+					}
+				});
+			}
+		});
+	} else {
+		var query = new Parse.Query("Hoidised");
+		query.equalTo("objectId", objid);
+		query.first({
+			success: function(data){
+				console.log("query #1 success");
+				data.save(null,{
+					success: function(d){
+						console.log("query #2 success");
+						console.log($("#amount_"+id).text());
+						d.set("mitu", parseInt($("#amount_"+id).text())-1);
+						d.save(null, function(){
+							console.log("query saved #3");
+							$("#amount_"+id).text(parseInt($("#amount_"+id).text())-1);
+						});
+						//console.log("new amount", $("#amount_"+id).text()+1);
+					}
+				});
+			}
+		});
+	}
+};
 
 //MUUDA PAROOLI
 $(document).on("click", "#changePw", function(){
@@ -136,6 +208,42 @@ $(document).on("click", "#changePw", function(){
 	}
 });
 
+var showList = function(data,d2){
+	d2 = d2 ? d2 : itemsids;
+	var t = '' ;
+	var s = '';
+	var i = 0;
+	data.forEach(function(d){
+		s+=
+		console.log(d);
+		t += '<div class="row"><div class="col-xs-8" style="margin-top:27px;">'+
+		'<div class="panel-group" id="accordion">'+
+		'<div class="panel panel-default">'+
+		'<div class="panel-heading">'+
+			'<h4 class="panel-title">'+
+				'<a data-toggle="collapse" data-parent="#accordion" href="#collapse'+i+'">'+d.name+' (<span id="amount_'+i+'">'+d.mitu+'</span>)'+'<div id="info" class="info"></div></a>'+
+			'</h4>'+
+		'</div>'+
+		'<div id="collapse'+i+'" class="panel-collapse collapse in">'+
+			'<div class="panel-body" id="info"> <label>Koostis:</label>'+d.content+'</br><label>Asukoht:</label>'+d.location+'</br><label>Valmistamise kuupäev:</label>'+d.makeDate+'</div>'+
+			'</div>'+
+			'</div>'+
+			'</div>'+
+			'</div>'+
+			''+
+				'<div class="col-xs-4"><div class="btn-group">'+
+					'<button onclick="plusCount('+i+',\''+d2[i]+'\')" type="button" class="btn btn-default lisaHoidis"><div class="glyphicon glyphicon-plus"></div></button>'+
+					'<button onclick="minusCount('+i+',\''+d2[i]+'\')" type="button" class="btn btn-default"><div class="glyphicon glyphicon-minus"></div></button>'+
+				'</div>'+
+			'</div></div>';
+
+
+		i++;
+	}) ;
+	document.getElementById("item_list").innerHTML = t;
+
+};
+
 //HOIDISTE KUVAMINE
 $(document).ready(".info",function(){
 	var user = Parse.User.current();
@@ -149,35 +257,66 @@ $(document).ready(".info",function(){
 	}
 });
 
+$(document).on("click", "#koostis", function(){
+	var bycontent = listitems.slice(0);
+	bycontent.sort(function(a,b){
+		var x = a.content.toLowerCase();
+		var y = b.content.toLowerCase();
+		return x < y ? -1 : x > y ? 1 : 0;
+	});
+	console.log("by content sort", bycontent);
+	showList(bycontent);
+});
+
+$(document).on("click", "#asukoht", function(){
+	var bylocation = listitems.slice(0);
+	bylocation.sort(function(a,b){
+		var x = a.location.toLowerCase();
+		var y = b.location.toLowerCase();
+		return x < y ? -1 : x > y ? 1 : 0;
+	});
+	console.log("by content sort", bylocation);
+	showList(bylocation);
+});
+
+$(document).on("click", "#kuupaev", function(){
+	var bydate = listitems.slice(0);
+	bydate.sort(function(a,b){
+		return a.makeDate - b.makeDate;
+	});
+	console.log("by content sort", bydate);
+	showList(bydate);
+});
 //HOIDISTE KUVAMINE
 // sellega peaks küsima andmeid Parse andmebaasis, see listItem on äkki andmetabeli nimi
-var query = new Parse.Query("Hoidised");
-// siin siis reastame kuupäeva järgi kahanevas järjekorras
-query.descending("createdAt");
-// siin nüüd võtame ainult 10 viimast
-//query.limit(10);
-// siin siis vist käsk fetchimiseks, et võtab andmed andmebaasist ja määrame ära kaks funktsiooni. kui on success ja kui on error.
-query.find({
-	success: function(data) {
-		// siin peaks kätte saama andmed andmebaasist ja siis saab edasi tegeleda nende kuvamisega
-		//console.log("QUERY SUCCESS", data);
-		var t = '' ;
-		var i = 0;
-        data.forEach(function(d){
-            //console.log(d) ;
-            t += '<div class="panel-group" id="accordion"><div class="panel panel-default"><div class="panel-heading">'+
-							'<h4 class="panel-title">'+
-								'<a data-toggle="collapse" data-parent="#accordion" href="#collapse'+i+'">'+d.attributes.name+'<div id="info" class="info"></div></a>'+
-							'</h4>'+
-						'</div>'+
-						'<div id="collapse'+i+'" class="panel-collapse collapse in">'+
-							'<div class="panel-body" id="info"> <label>Koostis:</label>'+d.attributes.content+'</br><label>Asukoht:</label>'+d.attributes.location+'</br><label>Valmistamise kuupäev:</label>'+d.attributes.makeDate+'</div></div></div>';
-						i++;
-        }) ;
-        document.getElementById("item_list").innerHTML = t;
-	},
-	error: function(data){
-		// see on selleks, kui tekib error andmete kättesaamisega
-		//console.log("QUERY FAILED",data);
-	}
-});
+var getListItems = function(){
+	listitems = [];
+	itemsids = [];
+	var query = new Parse.Query("Hoidised");
+	// siin siis reastame kuupäeva järgi kahanevas järjekorras
+	query.descending("createdAt");
+	// siin nüüd võtame ainult 10 viimast
+	//query.limit(10);
+	// siin siis vist käsk fetchimiseks, et võtab andmed andmebaasist ja määrame ära kaks funktsiooni. kui on success ja kui on error.
+	query.find({
+		success: function(data) {
+			// siin peaks kätte saama andmed andmebaasist ja siis saab edasi tegeleda nende kuvamisega
+			//console.log("QUERY SUCCESS", data);
+			console.log(data);
+	    data.forEach(function(d){
+	        //console.log(d) ;
+					listitems.push(d.attributes);
+
+	    }) ;
+			data.forEach(function(d){
+				itemsids.push(d.id);
+			});
+	    showList(listitems,itemsids);
+		},
+		error: function(data){
+			// see on selleks, kui tekib error andmete kättesaamisega
+			//console.log("QUERY FAILED",data);
+		}
+	});
+};
+getListItems();
