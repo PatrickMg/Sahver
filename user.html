@@ -8,7 +8,7 @@
     <link rel="stylesheet" type=text/css href="css/bootstrap.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script type="text/javascript" src="http://www.parsecdn.com/js/parse-latest.js"></script>
-    <script src="funktsioonid.js"></script>
+    <script src="functions.js"></script>
   </head>
 <body>
     </br>
@@ -22,7 +22,7 @@
         <div class="col-xs-1">
           <div class="btn-group">
             <button type="button" class="btn btn-default">
-              <a href="index.html"><div class="glyphicon glyphicon-log-out"></div></a>
+              <a href="index.html" id="logout"><div class="glyphicon glyphicon-log-out"></div></a>
             </button>
         </div>
       </div>
@@ -39,13 +39,12 @@
       </ul>
       <div class="tab-content" style="margin-top:75px;">
         <div id="home" class="tab-pane fade in active">
-          <h4>Tere tulemast Sahvri veebirakendusse!</h4>
-          <p>Teil on loodud 2 sahvrit</p>
+          <h4 class="avaleht"></h4>
           <p>Sahvri sisu on võimalik kuvada Loendi vahelehel.</p>
           <p>Hoidiseid saate lisada Halduse vahelehel.</p>
           <p>Oma kasutaja seadeid saate muuta Seadete vahelehel.</p>
         </div>
-        <div id="menu1" class="tab-pane fade">
+        <div id="menu1" class="tab-pane fade loend">
           <div class="row" style="margin-top:20px;">
             <div class="col-xs-7" style="margin-top:15px;">
               <h3>Loend</h3>
@@ -56,47 +55,17 @@
                   <div class="glyphicon glyphicon-filter"></div>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right">
-                  <li><a href="#">Filter 1</a></li>
-                  <li><a href="#">Filter 2</a></li>
-                  <li><a href="#">Filter 3</a></li>
-                  <li><a href="#">Filter 4</a></li>
-                  <li><a href="#">Filter 5</a></li>
-                </ul>
-                <button type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <div class="glyphicon glyphicon-chevron-down"></div>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-top">
-                  <li><a href="#">Sahver 1</a></li>
-                  <li><a href="#">Sahver 2</a></li>
+                  <li id="koostis"><a href="#">Koostis</a></li>
+                  <li id="asukoht"><a href="#">Asukoht</a></li>
+                  <li id="kuupaev"><a href="#">Valmistamise kuupäev</a></li>
                 </ul>
               </div>
             </div>
             <div class="col-xs-1">
             </div>
           </div>
-          <div class="row">
-            <div class="col-xs-7" style="margin-top:27px;">
-              <div class="panel-group" id="accordion">
-                <div class="panel panel-default">
-                  <div class="panel-heading">
-                    <h4 class="panel-title">
-                      <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Moooooos</a>
-                    </h4>
-                  </div>
-                  <div id="collapse1" class="panel-collapse collapse in">
-                    <div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-xs-4 ">
-              <div class="btn-group">
-                <button type="button" class="btn btn-default"><div class="glyphicon glyphicon-plus"></div></button>
-                <button type="button" class="btn btn-default"><div class="glyphicon glyphicon-minus"></div></button>
-              </div>
-            </div>
+          <div class="col-xs-12" id="item_list">
+
           </div>
         </div>
         <div id="menu2" class="tab-pane fade">
@@ -107,81 +76,57 @@
             <div class="col-xs-4">
             </div>
           </div>
-          <div class="row">
+          <div class="row add" id="add">
             <div class="col-xs-10">
               <form role="form">
                 <div class="form-group">
-                  <label for="email">Nimi:</label>
-                  <input type="name" class="form-control" id="name" placeholder="Sisestage hoidise nimetus">
+                  <label>Nimi:</label>
+                  <input type="text" class="form-control name" id="name" placeholder="Sisestage hoidise nimetus">
                 </div>
               </form>
             </div>
             <div class="col-xs-2">
             </div>
           </div>
-          <div class="row">
+          <div class="row add" id="add">
             <div class="col-xs-10">
               <form role="form">
                 <div class="form-group">
-                  <label for="email">Koostis:</label>
-                  <input type="name" class="form-control" id="name" placeholder="Sisestage hoidise koostis">
+                  <label>Koostis:</label>
+                  <input type="text" class="form-control content" id="content" placeholder="Sisestage hoidise koostis">
                 </div>
               </form>
             </div>
             <div class="col-xs-2">
             </div>
           </div>
-          <div class="row">
+          <div class="row add" id="add">
             <div class="col-xs-10">
               <form role="form">
                 <div class="form-group">
-                  <label for="email">Asukoht:</label>
-                  <input type="name" class="form-control" id="name" placeholder="Sisestage hoidise asukoht">
+                  <label>Asukoht:</label>
+                  <input type="text" class="form-control location" id="location" placeholder="Sisestage hoidise asukoht">
                 </div>
               </form>
             </div>
             <div class="col-xs-2">
             </div>
           </div>
-          <div class="row">
+          <div class="row add" id="add">
             <div class="col-xs-10">
               <form role="form">
                 <div class="form-group">
-                  <label for="email">Valmistamise kuupäev:</label>
-                  <input type="name" class="form-control" id="name" placeholder="Sisestage hoidise valmistamise kuupäev">
+                  <label>Valmistamise kuupäev:</label>
+                  <input type="date" class="form-control makeDate" id="makeDate" placeholder="Sisestage hoidise valmistamise kuupäev">
                 </div>
               </form>
             </div>
             <div class="col-xs-2">
             </div>
           </div>
-          <div class="row">
+          <div class="row add">
             <div class="col-xs-10">
-              <label for="need">Sahver kuhu soovid lisada:</label>
-            </div>
-            <div class="col-xs-2">
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-xs-10">
-              <form role="form">
-                <label class="checkbox-inline">
-                  <input type="checkbox" value="">Sahver 1
-                </label>
-                <label class="checkbox-inline">
-                  <input type="checkbox" value="">Sahver 2
-                </label>
-                <label class="checkbox-inline">
-                  <input type="checkbox" value="">Sahver 3
-                </label>
-              </form>
-            </div>
-            <div class="col-xs-2">
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-xs-10">
-              <button type="submit" class="btn btn-default" style="margin-top:15px;">Sisesta</button>
+              <button type="submit" id="lisaHoidis" class="btn btn-default" style="margin-top:15px;">Sisesta</button>
             </div>
             <div class="col-xs-2">
             </div>
@@ -195,32 +140,32 @@
             <div class="col-xs-2">
             </div>
           </div>
-          <div class="row">
+          <div class="row changePw" >
             <div class="col-xs-10">
               <form role="form">
                 <div class="form-group">
                   <label for="password">Muuda parooli:</label>
-                  <input type="password" class="form-control" id="name" placeholder="Sisestage uus parool">
+                  <input type="password" class="form-control" id="password" placeholder="Sisestage uus parool">
                 </div>
               </form>
             </div>
             <div class="col-xs-2">
             </div>
           </div>
-          <div class="row">
+          <div class="row changePw" >
             <div class="col-xs-10">
               <form role="form">
                 <div class="form-group">
-                  <input type="password" class="form-control" id="name" placeholder="Sisestage uuesti uus parool">
+                  <input type="password" class="form-control" id="passwordAgain" placeholder="Sisestage uuesti uus parool">
                 </div>
               </form>
             </div>
             <div class="col-xs-2">
             </div>
           </div>
-          <div class="row">
+          <div class="row changePw">
             <div class="col-xs-10">
-              <button type="submit" class="btn btn-default" style="margin-top:15px;">Muuda</button>
+              <button type="submit" id ="changePw" class="btn btn-default" style="margin-top:15px;">Muuda</button>
             </div>
             <div class="col-xs-2">
             </div>
@@ -238,23 +183,6 @@
                 <div class="form-group">
                   <input type="name" class="form-control" id="name" placeholder="Sisestage kasutajanimi" style="margin-top:20px;">
                 </div>
-              </form>
-            </div>
-            <div class="col-xs-2">
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-xs-10">
-              <form role="form">
-                <label class="checkbox-inline">
-                  <input type="checkbox" value="">Sahver 1
-                </label>
-                <label class="checkbox-inline">
-                  <input type="checkbox" value="">Sahver 2
-                </label>
-                <label class="checkbox-inline">
-                  <input type="checkbox" value="">Sahver 3
-                </label>
               </form>
             </div>
             <div class="col-xs-2">
@@ -288,7 +216,7 @@
     <div class='footer'>
         <div class='container-fluid bg-4 text-center'>
           <div class="varv">
-              <p>Rakendus on prototüübi faasis </br> Versioon 0.2 </br> Arendaja: Patrick Mägi </p>
+              <p>Rakendus on prototüübi faasis </br> Versioon 0.15 </br> Arendaja: Patrick Mägi </p>
           </div>
         </div>
       </div>
